@@ -1,43 +1,29 @@
 #include "stm32f10x.h"                  // Device header
 
-void Led_Init(void)
+void LED_Init(void)
 {
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);
 	
 	GPIO_InitTypeDef GPIO_InitStructure;
 	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_Out_OD;
-	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_1|GPIO_Pin_2;
+	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_13;
 	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
-	GPIO_Init(GPIOA,&GPIO_InitStructure);
-	GPIO_SetBits(GPIOA,GPIO_Pin_1|GPIO_Pin_2);
+	GPIO_Init(GPIOC,&GPIO_InitStructure);
+	
+	GPIO_SetBits(GPIOC,GPIO_Pin_13);
 }
-void Led1_ON(void)
+void LED_ON(void)
 {
-	GPIO_ResetBits(GPIOA,GPIO_Pin_1);	
+	GPIO_ResetBits(GPIOC,GPIO_Pin_13);	
 }
-void Led1_OFF(void)
+void LED_OFF(void)
 {
-	GPIO_SetBits(GPIOA,GPIO_Pin_1);
+	GPIO_SetBits(GPIOC,GPIO_Pin_13);
 }
-void Led1_Turn(void)
+void LED_Turn(void)
 {
-	if(GPIO_ReadOutputDataBit(GPIOA,GPIO_Pin_1)==0)
+	if(GPIO_ReadOutputDataBit(GPIOA,GPIO_Pin_13)==0)
 	{
-		GPIO_SetBits(GPIOA,GPIO_Pin_1);}
+		GPIO_SetBits(GPIOC,GPIO_Pin_13);}
 	else{
-		GPIO_ResetBits(GPIOA,GPIO_Pin_1);}}
-void Led2_ON(void)
-{
-	GPIO_ResetBits(GPIOA,GPIO_Pin_2);	
-}
-void Led2_OFF(void)
-{
-	GPIO_SetBits(GPIOA,GPIO_Pin_2);
-}
-void Led2_Turn(void)
-{
-	if(GPIO_ReadOutputDataBit(GPIOA,GPIO_Pin_2)==0)
-	{
-		GPIO_SetBits(GPIOA,GPIO_Pin_2);}
-	else{
-		GPIO_ResetBits(GPIOA,GPIO_Pin_2);}}
+		GPIO_ResetBits(GPIOC,GPIO_Pin_13);}}
