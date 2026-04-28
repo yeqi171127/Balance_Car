@@ -1,7 +1,7 @@
 #include "stm32f10x.h"                  // Device header
 
 void Encoder_Init(void)
-{
+{	/*TIM3*/
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
 	
@@ -11,36 +11,68 @@ void Encoder_Init(void)
 	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA,&GPIO_InitStructure);
 	
-	//TIM_InternalClockConfig(TIM3);编码器接口接管时钟所以不需要这一步
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
 	TIM_TimeBaseInitStructure.TIM_ClockDivision=TIM_CKD_DIV1;
 	TIM_TimeBaseInitStructure.TIM_CounterMode=TIM_CounterMode_Up;
 	TIM_TimeBaseInitStructure.TIM_Period=65536-1 ;
 	TIM_TimeBaseInitStructure.TIM_Prescaler=1-1 ;
 	TIM_TimeBaseInitStructure.TIM_RepetitionCounter=0;
+	TIM_TimeBaseInit(TIM3,&TIM_TimeBaseInitStructure);
 	
 	TIM_ICInitTypeDef TIM_ICInitStructure;
 	TIM_ICStructInit(&TIM_ICInitStructure);//结构不完整给结构体初始化附一个初始值
 	TIM_ICInitStructure.TIM_Channel=TIM_Channel_1;
 	TIM_ICInitStructure.TIM_ICFilter=0xF;
-	//	TIM_ICInitStructure.TIM_ICPolarity=TIM_ICPolarity_Rising;//与下面的极性选择重复这里极性选择是选择高低电平是否反相
-//	TIM_ICInitStructure.TIM_ICPrescaler=0;
-//	TIM_ICInitStructure.TIM_ICSelection=0;没有作用
 	TIM_ICInit(TIM3,&TIM_ICInitStructure);
 	TIM_ICInitStructure.TIM_Channel=TIM_Channel_2;
 	TIM_ICInitStructure.TIM_ICFilter=0xF;
-//	TIM_ICInitStructure.TIM_ICPolarity=TIM_ICPolarity_Rising;
 	TIM_ICInit(TIM3,&TIM_ICInitStructure);
 
-    TIM_EncoderInterfaceConfig(TIM3,TIM_EncoderMode_TI12,TIM_ICPolarity_Rising,TIM_ICPolarity_Rising);
+    TIM_EncoderInterfaceConfig(TIM3,TIM_EncoderMode_TI12,TIM_ICPolarity_Rising,TIM_ICPolarity_Falling);
 	
 	TIM_Cmd(TIM3,ENABLE);
-}
+	/*TIM4*/
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4,ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
+	
+	GPIO_InitStructure.GPIO_Mode=GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_6| GPIO_Pin_7;
+	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
+	GPIO_Init(GPIOB,&GPIO_InitStructure);
+	
+	TIM_TimeBaseInitStructure.TIM_ClockDivision=TIM_CKD_DIV1;
+	TIM_TimeBaseInitStructure.TIM_CounterMode=TIM_CounterMode_Up;
+	TIM_TimeBaseInitStructure.TIM_Period=65536-1 ;
+	TIM_TimeBaseInitStructure.TIM_Prescaler=1-1 ;
+	TIM_TimeBaseInitStructure.TIM_RepetitionCounter=0;
+	TIM_TimeBaseInit(TIM4,&TIM_TimeBaseInitStructure);
+	
+	TIM_ICStructInit(&TIM_ICInitStructure);//结构不完整给结构体初始化附一个初始值
+	TIM_ICInitStructure.TIM_Channel=TIM_Channel_1;
+	TIM_ICInitStructure.TIM_ICFilter=0xF;
+	TIM_ICInit(TIM4,&TIM_ICInitStructure);
+	TIM_ICInitStructure.TIM_Channel=TIM_Channel_2;
+	TIM_ICInitStructure.TIM_ICFilter=0xF;
+	TIM_ICInit(TIM4,&TIM_ICInitStructure);
 
-int16_t Encoder_Get(void)
+    TIM_EncoderInterfaceConfig(TIM4,TIM_EncoderMode_TI12,TIM_ICPolarity_Rising,TIM_ICPolarity_Falling);
+	
+	TIM_Cmd(TIM4,ENABLE);
+}
+int16_t Encoder_Get(uint8_t n)
 {
 	int16_t Temp;
-	Temp=TIM_GetCounter(TIM3);
-	TIM_SetCounter(TIM3,0);
-	return Temp;
+	if(n==1)
+	{
+		Temp=TIM_GetCounter(TIM3);
+		TIM_SetCounter(TIM3,0);
+		return Temp;
+	}
+	if(n==2)
+	{
+		Temp=TIM_GetCounter(TIM4);
+		TIM_SetCounter(TIM4,0);
+		return Temp;
+	}
+	return 0;
 }
