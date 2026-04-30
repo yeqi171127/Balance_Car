@@ -10,11 +10,13 @@ void Motor_Init(void)
 	GPIO_InitStructure.GPIO_Pin=GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15;
 	GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB,&GPIO_InitStructure);
-	
+
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);   // 开复用时钟
+	AFIO->MAPR |= AFIO_MAPR_SWJ_CFG_JTAGDISABLE;           // 关闭 JTAG，保留 SWD
 	PWM_Init();
-	
+	 
 }
-void Motor_SetPWM(uint8_t n,int8_t PWM)
+void Motor_SetPWM(uint8_t n,int16_t PWM)
 {
 	if(n==2)
 	{
@@ -27,7 +29,7 @@ void Motor_SetPWM(uint8_t n,int8_t PWM)
 	else{
 		GPIO_ResetBits(GPIOB,GPIO_Pin_12);
 		GPIO_SetBits(GPIOB,GPIO_Pin_13);
-		PWM_SetCompare1(-PWM);
+		PWM_SetCompare1((uint16_t)-PWM);
 	}
 	}
 	else if(n==1)

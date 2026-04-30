@@ -121,36 +121,42 @@
 //	}
 //}
 /*直流电机和编码器测试*/
-//int8_t PWML,PWMR;
-//uint8_t KeyNum;
-//float SpeedL,SpeedR;
+int16_t PWML,PWMR;
+uint8_t KeyNum;
+float SpeedL,SpeedR;
 
-//int main(void)
-//{
-//	OLED_Init();
-//	Key_Init();
-//	Timer_Init();
-//	Motor_Init();
-//	Encoder_Init();
-//	
-//	while(1)
-//	{ 
+int main(void)
+{
+	OLED_Init();
+	Key_Init();
+	Timer_Init();
+	Motor_Init();
+	Encoder_Init();
+	GPIO_SetBits(GPIOB,GPIO_Pin_14);
+
+	while(1)
+	{ 
 //		KeyNum=Key_GetNum();
 //		if(KeyNum==1)
 //		{
 //			PWML+=10;
+//			if(PWML>100)PWML=100;
 //		}
 //		if(KeyNum==2)
 //		{
 //			PWMR-=10;
+//			if(PWMR>100)PWMR=100;
 //		}
 //		if(KeyNum==3)
 //		{
 //			PWMR+=10;
+//			if(PWMR>100)PWMR=100;
+
 //		}
 //		if(KeyNum==4)
 //		{
 //			PWML-=10;
+//			if(PWML<-100)PWML=-100;
 //		}
 //		Motor_SetPWM(1,PWML);
 //		Motor_SetPWM(2,PWMR);		
@@ -161,12 +167,12 @@
 //		OLED_Printf(0,48,OLED_8X16,"SpdR:%+06.2f",SpeedR);
 //		OLED_Update();
 //	}
-//}
+}
 //void TIM1_UP_IRQHandler(void)
 //{
 //	static uint16_t Count;
 //	if(TIM_GetITStatus(TIM1,TIM_IT_Update)==SET)
-//		
+//	{	
 //		Key_Tick();
 //		if(Count>=50)
 //		{
@@ -175,24 +181,24 @@
 //			SpeedR=Encoder_Get(2)/44.0/0.05/9.27666;
 //		}
 //		Count++;
-//		TIM_ClearITPendingBit(TIM1,TIM_IT_Update);
+//	TIM_ClearITPendingBit(TIM1,TIM_IT_Update);}
 //	}
-/*串口测试*/
-int main(void)
-{
-	OLED_Init();
-	Serial_Init();
-	
-	Serial_SendString("Hello");
-	Serial_Printf("World");
-	while(1)
-	{
-		if(Serial_GetRxFlag()==1)
-		{
-			uint8_t RxData=Serial_GetRxDate();
-			
-			OLED_Printf(0,0,OLED_8X16,"RxDate:%02X",RxData);
-			OLED_Update();
-		}
-	}
+///*串口测试*/
+//int main(void)
+//{
+//	OLED_Init();
+//	Serial_Init();
+//	
+//	Serial_SendString("Hello");
+//	Serial_Printf("World");
+//	while(1)
+//	{
+//		if(Serial_GetRxFlag()==1)
+//		{
+//			uint8_t RxData=Serial_GetRxDate();
+//			
+//			OLED_Printf(0,0,OLED_8X16,"RxDate:%02X",RxData);
+//			OLED_Update();
+//		}
+//	}
 }
