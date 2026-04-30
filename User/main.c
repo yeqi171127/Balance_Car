@@ -132,7 +132,6 @@ int main(void)
 	Timer_Init();
 	Motor_Init();
 	Encoder_Init();
-	GPIO_SetBits(GPIOB,GPIO_Pin_14);
 
 	while(1)
 	{ 
