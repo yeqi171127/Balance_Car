@@ -9,4 +9,6 @@ void Serial_SendNumber(uint32_t Number,uint8_t Length);
 uint8_t Serial_GetRxFlag(void);
 uint8_t Serial_GetRxDate(void);
 void Serial_Printf(char *format,...);
+extern uint8_t Serial_RxFlag;
+
 #endif

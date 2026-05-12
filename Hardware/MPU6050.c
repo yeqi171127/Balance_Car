@@ -66,8 +66,8 @@ void MPU6050_Init(void)
 	MyI2C_Init();
 	MPU6050_WriteReg(MPU6050_PWR_MGMT_1,0x01);//解除睡眠，选择陀螺仪时钟
 	MPU6050_WriteReg(MPU6050_PWR_MGMT_2,0x00);//6个轴均不待机
-	MPU6050_WriteReg(MPU6050_SMPLRT_DIV,0x09);//采样分频为10
-	MPU6050_WriteReg(MPU6050_CONFIG,0x06);//滤波参数最大
+	MPU6050_WriteReg(MPU6050_SMPLRT_DIV,0x07);//采样分频为10
+	MPU6050_WriteReg(MPU6050_CONFIG,0x00);//0x06滤波参数最大 但是会导致延迟
 	MPU6050_WriteReg(MPU6050_GYRO_CONFIG,0x18);//陀螺仪选择最大量程
 	MPU6050_WriteReg(MPU6050_ACCEL_CONFIG,0x18);//加速度计选择最大量程
 }
